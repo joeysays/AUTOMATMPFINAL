@@ -15,6 +15,7 @@ import javax.swing.JPanel;
  */
 public class StatePanel extends JPanel{
     private boolean current;
+    private boolean visited;
     private String label;
     
     public void paintComponent(Graphics g) {
@@ -52,4 +53,7 @@ public class StatePanel extends JPanel{
     	this.label = label;
     }
     
+    public boolean isVisited() {
+    	return visited;
+    }
 }

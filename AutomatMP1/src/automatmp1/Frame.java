@@ -25,14 +25,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  *
  * @author Belle
  */
 public class Frame extends javax.swing.JFrame {
     public Container pane;
-    JPanel jp1 = new JPanel();
-    JPanel jp2 = new JPanel();
+    JPanel jp1 = new JPanel(); //left panel
+    JPanel jp2 = new JPanel(); //right panel
     JLabel jl = new JLabel();
     
     ArrayList<StatePanel> statesArr = new ArrayList<>();
@@ -55,9 +60,6 @@ public class Frame extends javax.swing.JFrame {
     StatePanel s16 = new StatePanel();
 
 
-    
-    
-	
     Formatter formatter = new Formatter();
     
    
@@ -73,8 +75,11 @@ public class Frame extends javax.swing.JFrame {
     Entity gr = new Entity("Grains", 0);
     Entity h1 = new Entity("Human 1", 0);
     Entity h2 = new Entity("Human 2", 0);
-    Entity e = new Entity("Scientist", 0);
+//    Entity e = new Entity("Scientist", 0);
     int m = 0;
+    
+    //******************************** DECLARING HASHMAP**************************************
+    HashMap<StatePanel, ArrayList<StatePanel>> hmap = new HashMap<StatePanel, ArrayList<StatePanel>>();
     
     /**
      * Creates new form Frame
@@ -83,6 +88,102 @@ public class Frame extends javax.swing.JFrame {
     public Frame() {
         initComponents();
         setTitle("Automat MP");
+        
+        /***********putting in elements to HASHMAP*******************/
+        ArrayList<StatePanel> connecting1 = new ArrayList<>(); //array list of states connecting to state 1
+        connecting1.add(s2);
+        hmap.put(s1, connecting1);
+        
+        ArrayList<StatePanel> connecting2 = new ArrayList<>();
+        connecting2.add(s1);
+        connecting2.add(s10);
+        connecting2.add(s3);
+        hmap.put(s2, connecting2);
+        
+        ArrayList<StatePanel> connecting3 = new ArrayList<>();
+        connecting3.add(s2);
+        connecting3.add(s9);
+        connecting3.add(s4);
+        hmap.put(s3, connecting3);
+        
+        ArrayList<StatePanel> connecting4 = new ArrayList<>();
+        connecting4.add(s3);
+        connecting4.add(s10);
+        connecting4.add(s5);
+        hmap.put(s4, connecting4);
+        
+        ArrayList<StatePanel> connecting5 = new ArrayList<>();
+        connecting5.add(s4);
+        connecting5.add(s14);
+        connecting5.add(s16);
+        hmap.put(s5, connecting5);
+        
+        ArrayList<StatePanel> connecting6 = new ArrayList<>();
+        connecting6.add(s5);
+        connecting6.add(s7);
+        connecting6.add(s13);
+        connecting6.add(s15);
+        hmap.put(s6, connecting6);
+        
+        ArrayList<StatePanel> connecting7 = new ArrayList<>();
+        connecting7.add(s6);
+        connecting7.add(s16);
+        connecting7.add(s8);
+        hmap.put(s7, connecting7);
+        
+        ArrayList<StatePanel> connecting8 = new ArrayList<>();
+        connecting8.add(s7);
+        hmap.put(s8, connecting8);
+        
+        ArrayList<StatePanel> connecting9 = new ArrayList<>();
+        connecting9.add(s3);
+        connecting9.add(s12);
+        connecting9.add(s10);
+        hmap.put(s9, connecting9);
+        
+        ArrayList<StatePanel> connecting10 = new ArrayList<>();
+        connecting10.add(s2);
+        connecting10.add(s4);
+        connecting10.add(s9);
+        connecting10.add(s11);
+        hmap.put(s10, connecting10);
+        
+        ArrayList<StatePanel> connecting11 = new ArrayList<>();
+        connecting11.add(s12);
+        connecting11.add(s10);
+        connecting11.add(s13);
+        hmap.put(s11, connecting11);
+        
+        ArrayList<StatePanel> connecting12 = new ArrayList<>();
+        connecting12.add(s9);
+        connecting12.add(s11);
+        hmap.put(s12, connecting12);
+        
+        ArrayList<StatePanel> connecting13 = new ArrayList<>();
+        connecting13.add(s11);
+        connecting13.add(s6);
+        connecting13.add(s16);
+        hmap.put(s13, connecting13);
+        
+        ArrayList<StatePanel> connecting14 = new ArrayList<>();
+        connecting14.add(s5);
+        connecting14.add(s15);
+        hmap.put(s14, connecting14);
+        
+        ArrayList<StatePanel> connecting15 = new ArrayList<>();
+        connecting15.add(s6);
+        connecting15.add(s14);
+        connecting15.add(s16);
+        hmap.put(s15, connecting15);
+        
+        ArrayList<StatePanel> connecting16 = new ArrayList<>();
+        connecting16.add(s13);
+        connecting16.add(s15);
+        connecting16.add(s7);
+        hmap.put(s16, connecting16);
+        
+        /***********************************************************/
+        
         
         statesArr.add(s1);
         statesArr.add(s2);
@@ -107,8 +208,11 @@ public class Frame extends javax.swing.JFrame {
         earth.addOccupant(gr.name);
         earth.addOccupant(h1.name);
         earth.addOccupant(h2.name);
-        earth.addOccupant(e.name);
-        jl.setIcon(new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\automaton.png"));
+//        earth.addOccupant(e.name);
+        
+//        jl.setIcon(new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\automaton.png"));
+        jl.setIcon(new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\automaton.png"));
+
         
         jList1.setModel(dm);
         dm.addElement(s.name);
@@ -137,8 +241,6 @@ public class Frame extends javax.swing.JFrame {
         s15.setBounds(580, 400, 55, 55);
         s16.setBounds(700, 270, 55, 55);
         
-
-
         s1.setLabel("000000");
         s2.setLabel("100110");
         s3.setLabel("000100");
@@ -196,6 +298,13 @@ public class Frame extends javax.swing.JFrame {
         messageTA = new javax.swing.JTextArea();
         jScrollPaneTA = new javax.swing.JScrollPane(messageTA);
         movesLbl = new javax.swing.JLabel();
+        helpButton = new javax.swing.JButton();
+        solutionsLbl = new javax.swing.JLabel();
+        path1Button = new javax.swing.JButton();
+        path2Button = new javax.swing.JButton();
+        path3Button = new javax.swing.JButton();
+        path4Button = new javax.swing.JButton();
+        solutionTA = new javax.swing.JTextArea();
 
        // sButton.setText("Scientist");
         sButton.addActionListener(new java.awt.event.ActionListener() {
@@ -272,6 +381,41 @@ public class Frame extends javax.swing.JFrame {
             }
         });
         
+        helpButton.setText("HELP");
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
+            }
+        });
+        
+        path1Button.setText("Solution 1");
+        path1Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                path1ButtonActionPerformed(evt);
+            }
+        });
+        
+        path2Button.setText("Solution 2");
+        path2Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                path2ButtonActionPerformed(evt);
+            }
+        });
+        
+        path3Button.setText("Solution 3");
+        path3Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                path3ButtonActionPerformed(evt);
+            }
+        });
+        
+        path4Button.setText("Solution 4");
+        path4Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                path4ButtonActionPerformed(evt);
+            }
+        });
+        
 
 		pane = getContentPane();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));
@@ -290,6 +434,35 @@ public class Frame extends javax.swing.JFrame {
 		pane.add(jp2);
 		
 	//	jp2.add(jl);
+		
+		jp2.add(helpButton);
+		helpButton.setBounds(0, 50, 80, 80);
+		
+		jp2.add(solutionsLbl);
+		solutionsLbl.setText("SHORTEST PATHS: ");
+		solutionsLbl.setBounds(90, 20, 170, 30);
+		solutionsLbl.setVisible(false);
+		
+		//adding path buttons
+		jp2.add(path1Button);	
+		path1Button.setBounds(90, 50, 100, 20);
+		path1Button.setVisible(false);
+		
+		jp2.add(path2Button);
+		path2Button.setBounds(90, 70, 100, 20);
+		path2Button.setVisible(false);
+		
+		jp2.add(path3Button);
+		path3Button.setBounds(90, 90, 100, 20);
+		path3Button.setVisible(false);
+		
+		jp2.add(path4Button);
+		path4Button.setBounds(90, 110, 100, 20);
+		path4Button.setVisible(false);
+		
+		jp2.add(solutionTA);
+		solutionTA.setBounds(210, 0, 290, 130);
+		solutionTA.setVisible(false);
 		
 		jp2.add(s1);
 		jp2.add(s2);
@@ -310,9 +483,6 @@ public class Frame extends javax.swing.JFrame {
 
 
 		jp2.add(jl);
-
-		
-		
 		
 		
 		jp1.add(jLabel1); // earth
@@ -340,7 +510,8 @@ public class Frame extends javax.swing.JFrame {
 		
 		
 		goButton.setBounds(300, 300, 80, 80);
-		ImageIcon goImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\go.png");
+//		ImageIcon goImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\go.png");
+		ImageIcon goImage = new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\go.png");
 		Image goImg = goImage.getImage();
 		Image newGoImg = goImg.getScaledInstance(goButton.getWidth(), goButton.getHeight(), Image.SCALE_SMOOTH); //this makes the image fit the button
 		ImageIcon goImageIcon = new ImageIcon(newGoImg);
@@ -359,7 +530,8 @@ public class Frame extends javax.swing.JFrame {
 		resetButton.setBounds(300, 480, 80, 80);
 		
 		sButton.setBounds(70, 270, 80, 80);
-		ImageIcon sImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\scientist.png");
+//		ImageIcon sImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\scientist.png");
+		ImageIcon sImage = new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\scientist.png");
 		Image sImg = sImage.getImage();
 		Image newSImg = sImg.getScaledInstance(sButton.getWidth(), sButton.getHeight(), Image.SCALE_SMOOTH); //this makes the image fit the button
 		ImageIcon sImageIcon = new ImageIcon(newSImg);
@@ -368,7 +540,8 @@ public class Frame extends javax.swing.JFrame {
 		validate();
 		
 		cButton.setBounds(70, 360, 80, 80);
-		ImageIcon cImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Cow.png");
+//		ImageIcon cImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Cow.png");
+		ImageIcon cImage = new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\Cow.png");
 		Image cImg = cImage.getImage();
 		Image newCImg = cImg.getScaledInstance(cButton.getWidth(), cButton.getHeight(), Image.SCALE_SMOOTH); //this makes the image fit the button
 		ImageIcon cImageIcon = new ImageIcon(newCImg);
@@ -377,7 +550,8 @@ public class Frame extends javax.swing.JFrame {
 		validate();
 		
 		lButton.setBounds(70, 450, 80, 80);
-		ImageIcon lImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Lion.png");
+//		ImageIcon lImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Lion.png");
+		ImageIcon lImage = new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\Lion.png");
 		Image lImg = lImage.getImage();
 		Image newLImg = lImg.getScaledInstance(lButton.getWidth(), lButton.getHeight(), Image.SCALE_SMOOTH); //this makes the image fit the button
 		ImageIcon lImageIcon = new ImageIcon(newLImg);
@@ -386,7 +560,8 @@ public class Frame extends javax.swing.JFrame {
 		validate();
 		
 		gButton.setBounds(170, 270, 80, 80);
-		ImageIcon gImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Grains.png");
+//		ImageIcon gImage = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Grains.png");
+		ImageIcon gImage = new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\Grains.png");
 		Image gImg = gImage.getImage();
 		Image newGImg = gImg.getScaledInstance(gButton.getWidth(), gButton.getHeight(), Image.SCALE_SMOOTH); //this makes the image fit the button
 		ImageIcon gImageIcon = new ImageIcon(newGImg);
@@ -395,7 +570,8 @@ public class Frame extends javax.swing.JFrame {
 		validate();
 		
 		h1Button.setBounds(170, 360, 80, 80);
-		ImageIcon h1Image = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Human1.png");
+//		ImageIcon h1Image = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Human1.png");
+		ImageIcon h1Image = new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\Human1.png");
 		Image h1Img = h1Image.getImage();
 		Image newH1Img = h1Img.getScaledInstance(h1Button.getWidth(), h1Button.getHeight(), Image.SCALE_SMOOTH); //this makes the image fit the button
 		ImageIcon h1ImageIcon = new ImageIcon(newH1Img);
@@ -405,7 +581,8 @@ public class Frame extends javax.swing.JFrame {
 
 		
 		h2Button.setBounds(170, 450, 80, 80);
-		ImageIcon h2Image = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Human2.png");
+//		ImageIcon h2Image = new ImageIcon("C:\\Users\\Belle\\Documents\\GitHub\\automat\\AutomatMP1\\src\\images\\Human2.png");
+		ImageIcon h2Image = new ImageIcon("C:\\Users\\Lucia Pineda\\workspace\\AUTOMATMPFINAL\\AutomatMP1\\src\\images\\Human2.png");
 		Image h2Img = h2Image.getImage();
 		Image newH2Img = h2Img.getScaledInstance(h2Button.getWidth(), h2Button.getHeight(), Image.SCALE_SMOOTH); //this makes the image fit the button
 		ImageIcon h2ImageIcon = new ImageIcon(newH2Img);
@@ -692,27 +869,6 @@ public class Frame extends javax.swing.JFrame {
         		System.out.println(mars.getOccupants().get(i));
         	}
             
-            //check if anyone was eaten
-            if(earth.check().equals("valid") && mars.check().equals("valid"))
-            {
-            	System.out.println("Everyone is still OK.");
-            	message = "Everyone is still OK.";
-            	messageTA.setText(message);
-            }
-            else {
-            	System.out.println("Someone was eaten :(");  
-            	
-            	if(!(earth.check().equals("valid")))
-            	{
-            		message = earth.check();
-            		messageTA.setText(message);
-            	}
-            	else if(!(mars.check().equals("valid")))
-	            	{
-	            		message = mars.check();
-	            		messageTA.setText(message);
-	            	}
-            }
         }
         else {
         	System.out.println("The scientist must be present to travel!");
@@ -730,12 +886,12 @@ public class Frame extends javax.swing.JFrame {
         if(earth.getOccupants().isEmpty())
         {
         	messageTA.setText("CONGRATS! Everyone made\n it to Mars safely :)");
-                sButton.setEnabled(false);
-                cButton.setEnabled(false);
-                lButton.setEnabled(false);
-                gButton.setEnabled(false);
-                h1Button.setEnabled(false);
-                h2Button.setEnabled(false);
+            sButton.setEnabled(false);
+            cButton.setEnabled(false);
+            lButton.setEnabled(false);
+            gButton.setEnabled(false);
+            h1Button.setEnabled(false);
+            h2Button.setEnabled(false);
         }
         
         
@@ -833,6 +989,55 @@ public class Frame extends javax.swing.JFrame {
             }
             c = 0;
         }
+        
+        //check if anyone was eaten
+        if(g == 1)
+        {
+	        if(earth.check().equals("valid") && mars.check().equals("valid"))
+	        {
+	        	System.out.println("Everyone is still OK.");
+	        	message = "Everyone is still OK.";
+	        	messageTA.setText(message);
+	        }
+	        else {
+	        	System.out.println("Someone was eaten :(");  
+	        	
+	        	if(!(earth.check().equals("valid"))) //if nobody was eaten
+	        	{
+	        		message = earth.check();
+	        		messageTA.setText(message);
+	        		System.out.println("BOOOOOOOOOOOOOOOOOOOOOM BEEEEEEEEEEEEEEEEEEEEEEEEEEEEETCH");
+	        		goButton.setEnabled(false);
+	        		clrButton.setEnabled(false);
+	        		sButton.setEnabled(false);
+	        		cButton.setEnabled(false);
+	        		gButton.setEnabled(false);
+	        		lButton.setEnabled(false);
+	        		h1Button.setEnabled(false);
+	        		h2Button.setEnabled(false);
+	        	}
+	        	else if(!(mars.check().equals("valid"))) //if somebody was eaten
+	            	{
+	            		message = mars.check();
+	            		messageTA.setText(message);
+	            		goButton.setEnabled(false);
+	            		clrButton.setEnabled(false);
+	            		sButton.setEnabled(false);
+	            		cButton.setEnabled(false);
+	            		gButton.setEnabled(false);
+	            		lButton.setEnabled(false);
+	            		h1Button.setEnabled(false);
+	            		h2Button.setEnabled(false);
+	
+	            	}
+	        }
+        }
+        else {
+        	System.out.println("The scientist must be present to travel!");
+    		message = "The scientist must be \npresent to travel!";
+    		messageTA.setText(message);
+        }
+        
         s1.setCurrent(false);
         s2.setCurrent(false);
         s3.setCurrent(false);
@@ -893,6 +1098,7 @@ public class Frame extends javax.swing.JFrame {
         }
         else if(s.location == 1 && h1.location == 1 && h2.location == 1 && l.location == 1 && cw.location == 1 && gr.location == 1){
             s8.setCurrent(true);
+//            messageTA.setText("CONGRATS! Everyone made\n it to Mars safely :)");
             repaint();
             revalidate();
         }
@@ -939,7 +1145,29 @@ public class Frame extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_goButtonActionPerformed
-
+    
+    private ArrayList<StatePanel> find_shortest_path(HashMap<StatePanel, ArrayList<StatePanel>> hm, StatePanel start, StatePanel end)
+    {
+    	//USING DEPTH FIRST SEARCH:
+    	
+    	ArrayList<StatePanel> states = new ArrayList<StatePanel>();
+    	
+//        path = path + [start]
+//        if start == end:
+//            return path
+//        if not graph.has_key(start):
+//            return None
+//        shortest = None
+//        for node in graph[start]:
+//            if node not in path:
+//                newpath = find_shortest_path(graph, node, end, path)
+//                if newpath:
+//                    if not shortest or len(newpath) < len(shortest):
+//                        shortest = newpath= 
+    	
+        return states;
+    }
+    
     private void clrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clrButtonActionPerformed
         // TODO add your handling code here:
         dm1.removeAllElements();
@@ -961,6 +1189,11 @@ public class Frame extends javax.swing.JFrame {
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {
     	m = 0;
     	movesLbl.setText("Moves: " + m);
+    	
+		goButton.setEnabled(true);
+		clrButton.setEnabled(true);
+		messageTA.setText("");
+		
         sButton.setEnabled(true);
         cButton.setEnabled(true);
         lButton.setEnabled(true);
@@ -968,15 +1201,22 @@ public class Frame extends javax.swing.JFrame {
         h1Button.setEnabled(true);
         h2Button.setEnabled(true);
         
+        s.setLocation(0);
+        cw.setLocation(0);
+        l.setLocation(0);
+        gr.setLocation(0);
+        h1.setLocation(0);
+        h2.setLocation(0);  
+        
+        earth.removeAllOccupants();
+        mars.removeAllOccupants();
+        
         earth.addOccupant(s.name);
         earth.addOccupant(cw.name);
         earth.addOccupant(l.name);
         earth.addOccupant(gr.name);
         earth.addOccupant(h1.name);
         earth.addOccupant(h2.name);
-        earth.addOccupant(e.name);
-        
-        mars.removeAllOccupants();
         
     	dm.removeAllElements();
     	dm1.removeAllElements();
@@ -1014,6 +1254,97 @@ public class Frame extends javax.swing.JFrame {
         repaint();
         revalidate();
     	
+        
+        System.out.println("RESET BUTTON WAS CLICKED!");
+        System.out.println("*****************Occupants on Earth: ********************");
+        for(int i = 0; i < earth.getOccupants().size(); i++)
+        {
+        	System.out.println(earth.getOccupants().get(i));
+        }
+        
+        System.out.println("*****************Occupants on Mars: ********************");
+        for(int i = 0; i < mars.getOccupants().size(); i++)
+        {
+        	System.out.println(mars.getOccupants().get(i));
+        }
+    }
+    
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	System.out.println("Help button was clicked!");
+    	
+    	if(helpButton.getText().equals("HELP"))
+    	{
+    		helpButton.setText("HIDE");
+    		
+    		solutionsLbl.setVisible(true);
+    		
+	    	path1Button.setVisible(true);
+	    	path2Button.setVisible(true);
+	    	path3Button.setVisible(true);
+	    	path4Button.setVisible(true);
+	    	
+	    	solutionTA.setVisible(true);
+	    	
+	    	
+    	}
+    	else if(helpButton.getText().equals("HIDE")){
+    		helpButton.setText("HELP");
+    		
+    		solutionsLbl.setVisible(false);
+    		
+	    	path1Button.setVisible(false);
+	    	path2Button.setVisible(false);
+	    	path3Button.setVisible(false);
+	    	path4Button.setVisible(false);
+	    	
+	    	solutionTA.setText("");
+	    	solutionTA.setVisible(false);
+    	}
+    	
+    }
+    
+    private void path1ButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	System.out.println("Path 1 button was clicked!");
+    	solutionTA.setText("1. Bring Scientist, Lion, and Cow to Mars. \n" +
+    			            "2. Bring Scientist and Cow back to Earth. \n" +
+    			            "3. Bring Scientist, Grains, and Cow to Mars. \n" +
+    			            "4. Bring Scientist and Cow back to Earth. \n" +
+    			            "5. Bring Scientist, Human 1, and Human 2 to Mars. \n" +
+    			            "6. Bring Scientist and Lion back to Earth. \n" +
+    			            "7. Bring Scientist, Cow, and Lion to Mars." );
+    }
+    
+    private void path2ButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	System.out.println("Path 2 button was clicked!");
+    	solutionTA.setText("1. Bring Scientist, Lion, and Cow to Mars. \n" +
+	            "2. Bring Scientist and Lion back to Earth. \n" +
+	            "3. Bring Scientist, Grains, and Lion to Mars. \n" +
+	            "4. Bring Scientist and Cow back to Earth. \n" +
+	            "5. Bring Scientist, Human 1, and Human 2 to Mars. \n" +
+	            "6. Bring Scientist and Lion back to Earth. \n" +
+	            "7. Bring Scientist, Cow, and Lion to Mars." );
+    }
+    
+    private void path3ButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	System.out.println("Path 3 button was clicked!");
+    	solutionTA.setText("1. Bring Scientist, Lion, and Cow to Mars. \n" +
+	            "2. Bring Scientist and Lion back to Earth. \n" +
+	            "3. Bring Scientist, Human 1, and Human 2 to Mars. \n" +
+	            "4. Bring Scientist and Cow back to Earth. \n" +
+	            "5. Bring Scientist, Grains, and Lion to Mars. \n" +
+	            "6. Bring Scientist and Lion back to Earth. \n" +
+	            "7. Bring Scientist, Cow, and Lion to Mars." );
+    }
+    
+    private void path4ButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	System.out.println("Path 4 button was clicked!");
+    	solutionTA.setText("1. Bring Scientist, Lion, and Cow to Mars. \n" +
+	            "2. Bring Scientist and Lion back to Earth. \n" +
+	            "3. Bring Scientist, Human 1, and Human 2 to Mars. \n" +
+	            "4. Bring Scientist and Cow back to Earth. \n" +
+	            "5. Bring Scientist, Grains, and Cow to Mars. \n" +
+	            "6. Bring Scientist and Cow back to Earth. \n" +
+	            "7. Bring Scientist, Cow, and Lion to Mars." );
     }
         
     /**
@@ -1072,7 +1403,14 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JButton lButton;
     private javax.swing.JButton sButton;
+    private javax.swing.JButton helpButton;
+    private javax.swing.JButton path1Button;
+    private javax.swing.JButton path2Button;
+    private javax.swing.JButton path3Button;
+    private javax.swing.JButton path4Button;
     private javax.swing.JTextArea messageTA;
+    private javax.swing.JTextArea solutionTA;
+    private javax.swing.JLabel solutionsLbl;
     private javax.swing.JLabel movesLbl;
     private javax.swing.JScrollPane jScrollPaneTA;
     // End of variables declaration//GEN-END:variables

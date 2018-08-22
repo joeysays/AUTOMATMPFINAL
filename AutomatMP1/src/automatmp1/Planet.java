@@ -27,10 +27,7 @@ public class Planet {
     }
     
     public void removeAllOccupants() {
-    	for(int i = 0; i < occupants.size(); i++)
-    	{
-    		occupants.remove(i);
-    	}
+    	occupants.clear();
     }
     
     public String check() {
